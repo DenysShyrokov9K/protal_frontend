@@ -1,13 +1,11 @@
-import logo from './logo.svg';
 import './App.css';
-import ReactDOM from "react-dom/client";
 import {
   BrowserRouter,
   Routes,
   Route,
 } from "react-router-dom";
-import Landing from './component/Landing';
-import Connect from './component/Connect';
+import Landing from './layout/Landing';
+import Connect from './layout/Connect';
 
 // import your route components too
 

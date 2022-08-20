@@ -1,11 +1,11 @@
-import React, {useState} from 'react'
+import React from 'react'
 import './Main.css'
 import {Link} from 'react-router-dom';
 import Header  from './Header';
 
 const Landing = () =>{
 
-    const [check, setCheck] = useState("");
+    const check = "";
     return(
         <div className="body">
             <Header check={check}/>
