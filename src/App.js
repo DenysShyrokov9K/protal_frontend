@@ -14,7 +14,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Landing />} />
-        <Route path='/connect' element={<Connect />} />
+        <Route path='/connect' element={<Connect walletAddress />} />
       </Routes>
     </BrowserRouter>
   );
