@@ -14,8 +14,10 @@ import {
 
 const Connect = () => {
     
-    const walletvalues = useRef(0);
+   // const walletvalues = useRef(0);
     const gamevalues = useRef(0);
+    const [walletvalues ,setWalletvalues] = useState('');
+    const [gameValueTest ,setGameValueTest] = useState("");
     const [transferType,setTransferType] = useState("Deposit");
     const [walletBalance, setBalance] = useState(0);
     const [gameBalance, setGameBalance] = useState(0);
@@ -33,7 +35,9 @@ const Connect = () => {
         const accounts = await provider.send("eth_requestAccounts", []);
         const balance_ = await portalContract.isDeposit(accounts[0]);
         setGameBalance(ethers.utils.formatEther(balance_)); 
-        console.log(ethers.utils.formatEther(balance_));
+        setGameValueTest(ethers.utils.formatEther(balance_));
+        //console.log(ethers.utils.formatEther(balance_));
+        
     }
 
     useEffect( () => {
@@ -65,15 +69,25 @@ const Connect = () => {
         }
     }
 
-    // const onChainge = e => {
+     const onWalletChange = async(e) => {
         // const { name, value } = e.target;
         // setValues({
         //     ...values,
         //     [name]: value
         //   });
         // console.log(value);
-        // setValues(e.target.value);
-    // }
+        // setWalletvalues(e.target.value);
+       //(gameValueTest) += Number(e.target.value);
+       //console.log(e.target.value);
+        setWalletvalues(e.target.value);
+        const accounts = await provider.send("eth_requestAccounts", []);
+        const balance_ = await portalContract.isDeposit(accounts[0]);
+        let balance = Number(ethers.utils.formatEther(balance_));
+       // console.log(gameValueTest_);
+       balance += Number(e.target.value);
+       // console.log(Number(e.target.value));
+        setGameValueTest(balance);
+     }
 
     const WithDrawClick = async() => {
         const gameVaule = gamevalues.current.value;
@@ -91,32 +105,40 @@ const Connect = () => {
         }
     }
 
-    const DepositScreen = () => (
-        <div>
-            <div className='row mt-20'>
-                <div className='col-6'>
-                    <p className='text-white'><strong>Wallet Balance:{walletBalance}</strong></p>
-                    <input className="form-control form-control-lg background-dark text-white"
-                     type="text" 
-                     placeholder="0.0" 
-                     ref={walletvalues}
-                    //  key = {values}
-                     name="inputWalletValue"
-                    //  onChange={onChainge}
-                     />
-                </div>
-                <div className='col-4'>
-                    <p className='text-white'><strong>Game Balance:{gameBalance}</strong></p>
-                    <input className="form-control form-control-lg background-dark text-white" type="text" placeholder="0.0" readOnly />
-                </div>
-            </div>
-            <div className='mt-5'>
-                <button onClick={DepositClick} className='m-auto font-2 button-width-80 border-radius-10 button-height-8 connect-button-background border-none text-white flex-container' >
-                    Deposit
-                </button>
-            </div>
-        </div>
-    )
+//     const DepositScreen = () => {
+        
+//         return(
+//         <div>
+//             <div className='row mt-20'>
+//                 <div className='col-6'>
+//                     <p className='text-white'><strong>Wallet Balance:{walletBalance}</strong></p>
+//                     <input className="form-control form-control-lg background-dark text-white"
+//                      type="text" 
+//                      placeholder="0.0" 
+//                      //ref={walletvalues}
+//                      value = {walletvalues}
+//                      name="inputWalletValue"
+//                      onChange={e => setWalletvalues(e.target.value)}
+//                      />
+//                 </div>
+//                 <div className='col-4'>
+//                     <p className='text-white'><strong>Game Balance:{gameBalance}</strong></p>
+//                     <input className="form-control form-control-lg background-dark text-white" 
+//                     type="text" 
+//                     placeholder="0.0" 
+//                     key={gameValueTest}
+//                     value={gameValueTest}
+//                     readOnly />
+//                 </div>
+//             </div>
+//             <div className='mt-5'>
+//                 <button onClick={DepositClick} className='m-auto font-2 button-width-80 border-radius-10 button-height-8 connect-button-background border-none text-white flex-container' >
+//                     Deposit
+//                 </button>
+//             </div>
+//         </div>
+//         )
+// }
 
     const WithDrawScreen = () => (
         <div>
@@ -130,7 +152,11 @@ const Connect = () => {
                 </div>
                 <div className='col-6'>
                     <p className='text-white'><strong>Wallet Balance:{walletBalance}</strong></p>
-                    <input className="form-control form-control-lg background-dark text-white" type="text" placeholder="0.0" readOnly />
+                    <input className="form-control form-control-lg background-dark text-white" 
+                    type="text" 
+                    placeholder="0.0" 
+                    value={walletBalance}
+                    readOnly />
                 </div>
             </div>
             <div className='mt-5'>
@@ -148,7 +174,36 @@ const Connect = () => {
                 <label className='text-white mr-3'>Deposit</label>
                 <ToggleButton check = {changeTransferType}/>
                 <label className='text-white'>WithDraw</label>
-                {transferType === "Deposit" ? <DepositScreen/> : 
+                {transferType === "Deposit" 
+                ? <div>
+                <div className='row mt-20'>
+                    <div className='col-6'>
+                        <p className='text-white'><strong>Wallet Balance:{walletBalance}</strong></p>
+                        <input className="form-control form-control-lg background-dark text-white"
+                         type="text" 
+                         placeholder="0.0" 
+                         //ref={walletvalues}
+                         value = {walletvalues}
+                         name="inputWalletValue"
+                         onChange={onWalletChange}
+                         />
+                    </div>
+                    <div className='col-4'>
+                        <p className='text-white'><strong>Game Balance:{gameBalance}</strong></p>
+                        <input className="form-control form-control-lg background-dark text-white" 
+                        type="text" 
+                        placeholder="0.0" 
+                        key={gameValueTest}
+                        value={gameValueTest}
+                        readOnly />
+                    </div>
+                </div>
+                <div className='mt-5'>
+                    <button onClick={DepositClick} className='m-auto font-2 button-width-80 border-radius-10 button-height-8 connect-button-background border-none text-white flex-container' >
+                        Deposit
+                    </button>
+                </div>
+            </div>: 
                     <WithDrawScreen />
                 }
                 <div className='mt-3'>
