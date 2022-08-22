@@ -15,10 +15,11 @@ const providers = {
     // 31337: new ethers.providers.JsonRpcProvider(RPCS[31337])
 }
 
-const onetokenContract = new ethers.Contract(Contrats.onetoken.address, Contrats.onetoken.abi, providers[supportChainId]);
+// const portalContract = new ethers.Contract(Contrats.portalcontract.address, Contrats.portalcontract.abi, providers[supportChainId]);
 
 export {
     supportChainId,
-    onetokenContract,
-    providers
+    // portalContract,
+    providers,
+    Contrats
 }

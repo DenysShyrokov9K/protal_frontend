@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState , useEffect, useRef } from 'react';
 import Header from './Header';
 import './Main.css'
 import ToggleButton from './ToggleButton'
@@ -6,16 +6,23 @@ import ToggleButton from './ToggleButton'
 import { ethers } from "ethers";
 import {
     supportChainId,
-    onetokenContract
+    // portalContract
+    providers,
+    Contrats
 } from '../contracts';
 
 
 const Connect = () => {
     
+    const walletvalues = useRef(0);
+    const gamevalues = useRef(0);
     const [transferType,setTransferType] = useState("Deposit");
     const [walletBalance, setBalance] = useState(0);
     const [gameBalance, setGameBalance] = useState(0);
     const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const portalContract = new ethers.Contract(Contrats.portalcontract.address, Contrats.portalcontract.abi, signer);
+    
     const getWalletBalance = async () => {
         const accounts = await provider.send("eth_requestAccounts", []);
         const balance_ = await provider.getBalance(accounts[0]);
@@ -23,10 +30,10 @@ const Connect = () => {
     }
 
     const getGameBalance = async() => {
-        
         const accounts = await provider.send("eth_requestAccounts", []);
-        const balance_ = await onetokenContract.isDeposit(accounts[0]);
+        const balance_ = await portalContract.isDeposit(accounts[0]);
         setGameBalance(ethers.utils.formatEther(balance_)); 
+        console.log(ethers.utils.formatEther(balance_));
     }
 
     useEffect( () => {
@@ -40,13 +47,48 @@ const Connect = () => {
         else setTransferType("Deposit");
     }
 
-    const DepositClick = () => {
+    const DepositClick = async() => {
         //console.log(provider.getBalance);
         //console.log(await provider.getBalance());
+        //console.log(values.inputWalletValue);
+        const depositVaule = walletvalues.current.value;
+        //console.log(depositVaule);
+        if(Number(depositVaule) !== NaN){
+            //const accounts = await provider.send("eth_requestAccounts", []);
+            //console.log(Number(ethers.utils.parseEther(String(depositVaule)));
+            //await portalContract.deposit(accounts[0], { value: Number(ethers.utils.parseEther(depositVaule) )});
+
+            const transaction = await portalContract.deposit({ value: ethers.utils.parseEther(depositVaule) })
+            
+            //sends 0.1 eth
+            await transaction.wait()
+        }
     }
 
-    const WithDrawClick = () => {
+    // const onChainge = e => {
+        // const { name, value } = e.target;
+        // setValues({
+        //     ...values,
+        //     [name]: value
+        //   });
+        // console.log(value);
+        // setValues(e.target.value);
+    // }
 
+    const WithDrawClick = async() => {
+        const gameVaule = gamevalues.current.value;
+        //console.log(depositVaule);
+        if(Number(gameVaule) !== NaN){
+            console.log(gameVaule);
+            //const accounts = await provider.send("eth_requestAccounts", []);
+            //console.log(Number(ethers.utils.parseEther(String(depositVaule)));
+            //await portalContract.deposit(accounts[0], { value: Number(ethers.utils.parseEther(depositVaule) )});
+
+            const transaction = await portalContract.withDraw(ethers.utils.parseEther(gameVaule));
+            
+            //sends 0.1 eth
+            await transaction.wait()
+        }
     }
 
     const DepositScreen = () => (
@@ -54,7 +96,14 @@ const Connect = () => {
             <div className='row mt-20'>
                 <div className='col-6'>
                     <p className='text-white'><strong>Wallet Balance:{walletBalance}</strong></p>
-                    <input className="form-control form-control-lg background-dark text-white" type="text" placeholder="0.0"  />
+                    <input className="form-control form-control-lg background-dark text-white"
+                     type="text" 
+                     placeholder="0.0" 
+                     ref={walletvalues}
+                    //  key = {values}
+                     name="inputWalletValue"
+                    //  onChange={onChainge}
+                     />
                 </div>
                 <div className='col-4'>
                     <p className='text-white'><strong>Game Balance:{gameBalance}</strong></p>
@@ -74,7 +123,10 @@ const Connect = () => {
             <div className='row mt-20'>
                 <div className='col-4'>
                     <p className='text-white'><strong>Game Balance:{gameBalance}</strong></p>
-                    <input className="form-control form-control-lg background-dark text-white" type="text" placeholder="0.0"  />
+                    <input className="form-control form-control-lg background-dark text-white" 
+                    type="text" 
+                    ref={gamevalues}
+                    placeholder="0.0"  />
                 </div>
                 <div className='col-6'>
                     <p className='text-white'><strong>Wallet Balance:{walletBalance}</strong></p>
