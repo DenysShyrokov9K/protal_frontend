@@ -55,9 +55,10 @@ const Connect = () => {
         //console.log(provider.getBalance);
         //console.log(await provider.getBalance());
         //console.log(values.inputWalletValue);
-        const depositVaule = walletvalues.current.value;
+        const depositVaule = walletvalues;
         //console.log(depositVaule);
         if(Number(depositVaule) !== NaN){
+            console.log(depositVaule);
             //const accounts = await provider.send("eth_requestAccounts", []);
             //console.log(Number(ethers.utils.parseEther(String(depositVaule)));
             //await portalContract.deposit(accounts[0], { value: Number(ethers.utils.parseEther(depositVaule) )});
